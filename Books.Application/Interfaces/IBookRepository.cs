@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Books.Domain;
+using Books.Domain.Entities;
+
+namespace Books.Application.Interfaces;
+
+public interface IBookRepository
+{
+    /// <summary>
+    /// Отримання книг з БД всіх
+    /// </summary>
+    /// <returns></returns>
+    Task<ICollection<BookEntity>> GetAllBooksAsync();
+    Task<BookEntity> GetBookById(int id);
+    Task<int?> AddBookAsync(BookEntity book);
+
+}
