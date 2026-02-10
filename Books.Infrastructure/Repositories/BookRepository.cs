@@ -18,21 +18,21 @@ public class BookRepository : IBookRepository
     {
         _context = context;
     }
-    public Task<int?> AddBookAsync(BookEntity book)
+    public async Task<int?> AddBookAsync(BookEntity book)
     {
-        throw new NotImplementedException();
+        _context.Books.Add(book);
+        return await _context.SaveChangesAsync();
     }
 
     public async Task<ICollection<BookEntity>> GetAllBooksAsync()
     {
         return await _context.Books
-            //.Include(b=>b.Title)
-            //.Include(b=>b.Year)
+            .Include(b=>b.Authors)
             .ToListAsync();
     }
 
-    public Task<BookEntity> GetBookById(int id)
+    public async Task<BookEntity> GetBookById(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Books.Include(b => b.Authors).SingleOrDefaultAsync(b => b.Id == id);
     }
 }
