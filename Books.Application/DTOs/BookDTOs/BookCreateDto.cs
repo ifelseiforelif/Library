@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Books.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,3 +14,4 @@ public class BookCreateDto
     public int GenreId { get; set; }
     public ICollection<int>? AuthorsId { get; set; }
 }
+

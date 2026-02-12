@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Books.Application.DTOs.BookDTOs;
 using Books.Domain;
 using Books.Domain.Entities;
 
@@ -16,6 +17,6 @@ public interface IBookRepository
     /// <returns></returns>
     Task<ICollection<BookEntity>> GetAllBooksAsync();
     Task<BookEntity> GetBookById(int id);
-    Task<int?> AddBookAsync(BookEntity book);
+    Task<int?> AddBookAsync(BookCreateDto book);
 
 }

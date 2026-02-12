@@ -1,5 +1,6 @@
 ﻿using Books.Application.DTOs.BookDTOs;
 using Books.Application.Interfaces;
+using Books.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Books.Api.Controllers;
@@ -22,6 +23,13 @@ public class BooksController(IBookRepository _bookRepository):ControllerBase
         var book = await _bookRepository.GetBookById(id);
         var result = new BookReadDto(book);
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddBook([FromBody] BookCreateDto bookDto)
+    {
+        int? id = await _bookRepository.AddBookAsync(bookDto);
+        return CreatedAtAction(nameof(AddBook), id);
     }
 
 
