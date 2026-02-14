@@ -19,32 +19,43 @@ public class BookRepository : IBookRepository
     {
         _context = context;
     }
-    public async Task<int?> AddBookAsync(BookCreateDto bookDto)
+
+    private async Task ValidateGenreAsync(int genreId)
     {
-        var authors = await _context.Authors.Where(a => bookDto.AuthorsId.Contains(a.Id)).ToListAsync();
-        if (authors.Count != bookDto.AuthorsId.Count)
+        if (!await _context.Genres.AnyAsync(g => g.Id == genreId))
+            throw new Exception("Genre not found");
+    }
+
+    private async Task<ICollection<AuthorEntity>> GetAuthorsAsync(ICollection<int> authorIds)
+    {
+        var authors = await _context.Authors.Where(a => authorIds.Contains(a.Id)).ToListAsync();
+        if (authors.Count != authorIds.Count)
             throw new Exception("Some authors not found");
-        var book = new BookEntity
-        {
-            Title = bookDto.Title,
-            Year = bookDto.Year,
-            GenreId = bookDto.GenreId,
-            Authors = authors
-        };
+        return authors;
+    }
+    public async Task<int?> AddBookAsync(BookEntity book, ICollection<int>? authorIds)
+    {
+        await ValidateGenreAsync(book.GenreId);
+
+        if (authorIds != null)
+            book.Authors = await GetAuthorsAsync(authorIds);
 
         _context.Books.Add(book);
         await _context.SaveChangesAsync();
         return book.Id;
     }
 
+
+
+
     public async Task<ICollection<BookEntity>> GetAllBooksAsync()
     {
         return await _context.Books
-            .Include(b=>b.Authors)
+            .Include(b => b.Authors)
             .ToListAsync();
     }
 
-    public async Task<BookEntity> GetBookById(int id)
+    public async Task<BookEntity> GetBookByIdAsync(int id)
     {
         return await _context.Books.Include(b => b.Authors).SingleOrDefaultAsync(b => b.Id == id);
     }

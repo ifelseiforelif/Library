@@ -1,5 +1,7 @@
 ﻿
 using Books.Application.Interfaces;
+using Books.Application.Mapping;
+using Books.Application.Services;
 using Books.Infrastructure.Data;
 using Books.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +17,13 @@ namespace Books.Api
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddAutoMapper(
+               _ => { }, //пустий конфігураційний делегат.
+               typeof(BookProfile).Assembly
+            );
             // Add services to the container.
             builder.Services.AddScoped<IBookRepository,BookRepository>();
+            builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

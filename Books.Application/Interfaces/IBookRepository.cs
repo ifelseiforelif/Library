@@ -16,7 +16,7 @@ public interface IBookRepository
     /// </summary>
     /// <returns></returns>
     Task<ICollection<BookEntity>> GetAllBooksAsync();
-    Task<BookEntity> GetBookById(int id);
-    Task<int?> AddBookAsync(BookCreateDto book);
+    Task<BookEntity> GetBookByIdAsync(int id);
+    Task<int?> AddBookAsync(BookEntity book, ICollection<int>? authorIds);
 
 }
