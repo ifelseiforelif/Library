@@ -1,6 +1,6 @@
 ﻿using Books.Application;
 using Books.Application.DTOs.BookDTOs;
-using Books.Application.Interfaces;
+using Books.Application.Interfaces.Repositories;
 using Books.Domain.Entities;
 using Books.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

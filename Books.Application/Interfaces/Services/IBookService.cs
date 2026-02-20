@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Books.Application.Interfaces;
+namespace Books.Application.Interfaces.Services;
 
 public interface IBookService
 {

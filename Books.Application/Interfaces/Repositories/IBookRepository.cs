@@ -7,7 +7,7 @@ using Books.Application.DTOs.BookDTOs;
 using Books.Domain;
 using Books.Domain.Entities;
 
-namespace Books.Application.Interfaces;
+namespace Books.Application.Interfaces.Repositories;
 
 public interface IBookRepository
 {

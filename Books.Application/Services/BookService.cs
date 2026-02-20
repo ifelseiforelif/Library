@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Books.Application.DTOs.BookDTOs;
-using Books.Application.Interfaces;
+using Books.Application.Interfaces.Repositories;
+using Books.Application.Interfaces.Services;
 using Books.Domain.Entities;
 using System;
 using System.Collections.Generic;

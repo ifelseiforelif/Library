@@ -17,4 +17,12 @@ public class LibraryDbContext:DbContext
     {
         
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<BookEntity>()
+            .Property(b => b.CreatedAt)
+            .HasDefaultValueSql("SYSDATETIME()")
+            .IsRequired(false);
+    }
 }
