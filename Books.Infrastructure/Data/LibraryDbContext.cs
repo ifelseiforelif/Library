@@ -21,10 +21,20 @@ public class LibraryDbContext:DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BookEntity>()
-            .Property(b => b.CreatedAt)
-            .HasDefaultValueSql("SYSDATETIME()")
-            .IsRequired(false);
+        if (Database.IsMySql())
+        {
+            modelBuilder.Entity<BookEntity>()
+    .Property(b => b.CreatedAt)
+    .HasColumnType("datetime(6)")        // точность микросекунд
+    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+    .ValueGeneratedOnAdd();
+        }
+        else if (Database.IsSqlServer())
+        {
+            modelBuilder.Entity<BookEntity>()
+                .Property(b => b.CreatedAt)
+                .HasDefaultValueSql("SYSDATETIME()");
+        }
         modelBuilder.Entity<UserEntity>().HasIndex(u => u.Email).IsUnique();
 
     }
