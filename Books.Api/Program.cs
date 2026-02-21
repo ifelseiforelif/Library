@@ -1,8 +1,10 @@
-﻿using Books.Application.Interfaces.Repositories;
+﻿using Books.Application.Interfaces.Helpers;
+using Books.Application.Interfaces.Repositories;
 using Books.Application.Interfaces.Services;
 using Books.Application.Mapping;
 using Books.Application.Services;
 using Books.Infrastructure.Data;
+using Books.Infrastructure.Helpers;
 using Books.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,14 +23,18 @@ namespace Books.Api
                _ => { }, //пустий конфігураційний делегат.
                typeof(BookProfile).Assembly,
                typeof(AuthorProfile).Assembly,
-               typeof(GenreProfile).Assembly
+               typeof(GenreProfile).Assembly,
+               typeof(UserProfile).Assembly
             );
             // Add services to the container.
             builder.Services.AddScoped<IBookRepository, BookRepository>();
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IAuthorService, AuthorService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IHashHelper, HashHelper>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

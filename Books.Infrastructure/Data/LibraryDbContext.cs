@@ -13,6 +13,7 @@ public class LibraryDbContext:DbContext
     public DbSet<BookEntity> Books { get; set; }
     public DbSet<AuthorEntity> Authors { get; set; }
     public DbSet<GenreEntity> Genres { get; set; }
+    public DbSet<UserEntity> Users { get; set; }
     public LibraryDbContext(DbContextOptions<LibraryDbContext> options):base(options)
     {
         
@@ -24,5 +25,7 @@ public class LibraryDbContext:DbContext
             .Property(b => b.CreatedAt)
             .HasDefaultValueSql("SYSDATETIME()")
             .IsRequired(false);
+        modelBuilder.Entity<UserEntity>().HasIndex(u => u.Email).IsUnique();
+
     }
 }

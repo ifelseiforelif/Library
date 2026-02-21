@@ -1,19 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Books.Application.DTOs.UserDTOs;
+using Books.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Books.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController:ControllerBase
+public class UserController(IUserService _userService):ControllerBase
 {
-    [HttpGet("{password}")]
-    public IActionResult GetPasswordHash([FromRoute] string password)
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers()
     {
-        string hash = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
-        password= "kdk";
+        var users = await _userService.GetAllUserAsync();
+        return Ok(users);
+    }
 
-        bool isValid = BCrypt.Net.BCrypt.EnhancedVerify(password, hash);
+    [HttpGet("{email}")]
+    public async Task<IActionResult> GetUserByEmail([FromRoute] string email)
+    {
+        var user = await _userService.GetByEmailUserAsync(email);
 
-        return Ok(new {hash=hash, isValid=isValid});
+        if (user == null)
+            return NotFound();
+
+        return Ok(user);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
+    {
+        var email = await _userService.CreateUserAsync(dto);
+
+        if (email != null)
+        {
+            return CreatedAtAction(nameof(GetUserByEmail), new { email }, email);
+        }
+        else
+        {
+            return BadRequest();
+        }
     }
 }
