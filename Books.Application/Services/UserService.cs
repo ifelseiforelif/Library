@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Books.Application.DTOs.UserDTOs;
+using Books.Application.Interfaces.Helpers;
 using Books.Application.Interfaces.Repositories;
 using Books.Application.Interfaces.Services;
 using Books.Domain.Entities;
@@ -15,11 +16,15 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly IJwtService _jwtService;
+    private readonly IHashHelper _hashHelper;
 
-    public UserService(IUserRepository userRepository, IMapper mapper)
+    public UserService(IUserRepository userRepository, IMapper mapper, IJwtService jwtService, IHashHelper hashHelper)
     {
         _userRepository = userRepository;
         _mapper = mapper;
+        _jwtService = jwtService;
+        _hashHelper = hashHelper;
     }
     public async Task<string> CreateUserAsync(UserCreateDto dto)
     {
@@ -38,5 +43,28 @@ public class UserService : IUserService
         if (user == null) return null;
 
         return _mapper.Map<UserReadDto>(user);
+    }
+
+    public async Task<string> LoginAsync(UserLoginDto dto)
+    {
+        // Чи існує користувач з таким email
+        var user = await _userRepository.GetUserByEmailAsync(dto.Email);
+        if (user == null)
+        {
+            throw new UnauthorizedAccessException("Невірний email або пароль");
+        }
+
+        // Перевірка валідності пароля
+        if(!_hashHelper.IsValidPassword(dto.Password, user.PasswordHash))
+        {
+            throw new UnauthorizedAccessException("Неверный логин или пароль");
+
+        }
+
+        // Генеруємо JWT токен для авторизованого користувача
+        var token = _jwtService.GenerateAccessToken(user);
+
+        // Повертаємо токен
+        return token;
     }
 }

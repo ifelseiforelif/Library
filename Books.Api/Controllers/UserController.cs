@@ -8,6 +8,14 @@ namespace Books.Api.Controllers;
 [Route("api/[controller]")]
 public class UserController(IUserService _userService):ControllerBase
 {
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
+    {
+        var token = await _userService.LoginAsync(dto);
+        return Ok(new {accessToken=token});
+    }
+
+
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {

@@ -3,6 +3,7 @@ using Books.Application.DTOs.BookDTOs;
 using Books.Application.Interfaces.Services;
 using Books.Domain.Entities;
 using Books.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace Books.Api.Controllers
     [ApiController]
     public class AuthorController(IAuthorService _authorService) : ControllerBase
     {
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
