@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Books.Application.DTOs.UserDTOs;
-
 public class UserLoginDto
 {
     [Required]

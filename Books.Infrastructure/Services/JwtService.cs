@@ -1,8 +1,8 @@
-﻿using Books.Application.Interfaces.Services;
-using Books.Domain.Entities;
-using Microsoft.Extensions.Configuration;
+﻿using Books.Application.DTOs.UserDTOs;
+using Books.Application.Interfaces.Services;
+using Books.Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,39 +11,33 @@ namespace Books.Infrastructure.Services;
 
 public class JwtService : IJwtService
 {
-    private readonly IConfiguration _configuration;
+    private readonly JwtSettings _jwtSettings;
 
-    public JwtService(IConfiguration configuration)
+    public JwtService(IOptions<JwtSettings> jwtOptions)
     {
-        _configuration = configuration;
+        _jwtSettings = jwtOptions.Value;
     }
 
-    public string GenerateAccessToken(UserEntity userEntity)
+    public string GenerateAccessToken(UserLoginDto userLoginDto, string role)
     {
-        // Читаємо налаштування з appsettings.json
-        var jwtSettings = _configuration.GetSection("Jwt");
-        var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
-        var issuer = jwtSettings["Issuer"];
-        var audience = jwtSettings["Audience"];
-        var expiresMinutes = Convert.ToDouble(jwtSettings["ExpiresMinutes"]);
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
 
-        // Формуємо claims
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, userEntity.Id.ToString()),
-            new Claim(ClaimTypes.Email, userEntity.Email),
-            new Claim(ClaimTypes.Role, userEntity.Role.ToString())
+            new Claim(ClaimTypes.Email, userLoginDto.Email),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         var signingKey = new SymmetricSecurityKey(key);
-        var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+        var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
-            signingCredentials: creds
+            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiresMinutes),
+            signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);

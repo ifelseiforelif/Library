@@ -60,9 +60,14 @@ public class UserService : IUserService
             throw new UnauthorizedAccessException("Неверный логин или пароль");
 
         }
+        if(!user.IsActive)
+        {
+            throw new UnauthorizedAccessException("Користувача заблоковано");
+
+        }
 
         // Генеруємо JWT токен для авторизованого користувача
-        var token = _jwtService.GenerateAccessToken(user);
+        var token = _jwtService.GenerateAccessToken(dto, user.Role.ToString());
 
         // Повертаємо токен
         return token;
