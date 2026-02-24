@@ -1,6 +1,7 @@
 ﻿using Books.Application.DTOs.BookDTOs;
 using Books.Application.Interfaces.Services;
 using Books.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,8 @@ public class BooksController(IBookService _bookService):ControllerBase
         return Ok(book);
     }
 
-  
+
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddBook([FromBody] BookCreateDto bookDto)
     {

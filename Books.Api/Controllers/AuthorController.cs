@@ -18,7 +18,6 @@ namespace Books.Api.Controllers
     [ApiController]
     public class AuthorController(IAuthorService _authorService) : ControllerBase
     {
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -33,6 +32,7 @@ namespace Books.Api.Controllers
             return Ok(author);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorCreateDto authorDto)
         {

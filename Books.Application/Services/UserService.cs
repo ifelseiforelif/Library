@@ -28,7 +28,9 @@ public class UserService : IUserService
     }
     public async Task<string> CreateUserAsync(UserCreateDto dto)
     {
+    
         var entity = _mapper.Map<UserEntity>(dto);
+        dto.Email = dto.Email.Trim();
         return await _userRepository.AddUserAsync(entity, dto.Password);
     }
 
@@ -48,6 +50,7 @@ public class UserService : IUserService
     public async Task<string> LoginAsync(UserLoginDto dto)
     {
         // Чи існує користувач з таким email
+        dto.Email = dto.Email.Trim();
         var user = await _userRepository.GetUserByEmailAsync(dto.Email);
         if (user == null)
         {
