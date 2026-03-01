@@ -35,16 +35,16 @@ public class Program
             configuration.GetSection("Jwt"));
 
         // ================= Database =================
-        builder.Services.AddDbContext<LibraryDbContext>(options =>
-        {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
         //builder.Services.AddDbContext<LibraryDbContext>(options =>
-        //    options.UseMySql(
-        //        configuration.GetConnectionString("ConnectionToMySql"),
-        //        ServerVersion.AutoDetect(
-        //            configuration.GetConnectionString("ConnectionToMySql")
-        //        )));
+        //{
+        //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        //});
+        builder.Services.AddDbContext<LibraryDbContext>(options =>
+            options.UseMySql(
+                configuration.GetConnectionString("ConnectionToMySql"),
+                ServerVersion.AutoDetect(
+                    configuration.GetConnectionString("ConnectionToMySql")
+                )));
 
         // ================= AutoMapper =================
         builder.Services.AddAutoMapper(
