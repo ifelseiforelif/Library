@@ -14,6 +14,7 @@ public class LibraryDbContext:DbContext
     public DbSet<AuthorEntity> Authors { get; set; }
     public DbSet<GenreEntity> Genres { get; set; }
     public DbSet<UserEntity> Users { get; set; }
+    public DbSet<CountryEntity> Countries { get; set; }
     public LibraryDbContext(DbContextOptions<LibraryDbContext> options):base(options)
     {
         

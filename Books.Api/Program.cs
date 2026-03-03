@@ -1,7 +1,9 @@
-﻿using Books.Application.Interfaces.Helpers;
+﻿using Books.Application.Commands.CreateCountry;
+using Books.Application.Interfaces.Helpers;
 using Books.Application.Interfaces.Repositories;
 using Books.Application.Interfaces.Services;
 using Books.Application.Mapping;
+using Books.Application.Queries.GetAllCountries;
 using Books.Application.Services;
 using Books.Infrastructure.Configuration;
 using Books.Infrastructure.Data;
@@ -52,14 +54,36 @@ public class Program
             typeof(BookProfile).Assembly,
             typeof(AuthorProfile).Assembly,
             typeof(GenreProfile).Assembly,
-            typeof(UserProfile).Assembly
+            typeof(UserProfile).Assembly,
+            typeof(CountryProfile).Assembly
         );
+        // ================= CORS =================
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+        //==================MEDIATR======================
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(CreateCountryHandler).Assembly);
+           
+        });
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(GetAllCountriesHandler).Assembly);
 
+        });
         // ================= Repositories =================
         builder.Services.AddScoped<IBookRepository, BookRepository>();
         builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+        builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
         // ================= Services =================
         builder.Services.AddScoped<IBookService, BookService>();
