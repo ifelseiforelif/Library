@@ -153,6 +153,7 @@ public class Program
         builder.Services.AddAuthorization();
 
         var app = builder.Build();
+        app.UseCors("AllowAll");
 
         // ================= Middleware =================
         if (app.Environment.IsDevelopment())
