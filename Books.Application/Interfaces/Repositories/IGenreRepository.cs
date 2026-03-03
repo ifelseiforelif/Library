@@ -11,5 +11,5 @@ public interface IGenreRepository
 {
     Task<ICollection<GenreEntity>> GetAllGenreAsync();
     Task<GenreEntity?> GetGenreByIdAsync(int id);
-    Task<int?> AddGenreAsync(GenreEntity author);
+    Task<int?> AddGenreAsync(GenreEntity genre);
 }

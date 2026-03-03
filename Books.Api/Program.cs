@@ -59,11 +59,13 @@ public class Program
         builder.Services.AddScoped<IBookRepository, BookRepository>();
         builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 
         // ================= Services =================
         builder.Services.AddScoped<IBookService, BookService>();
         builder.Services.AddScoped<IAuthorService, AuthorService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IGenreService, GenreService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
         builder.Services.AddScoped<IHashHelper, HashHelper>();
 
