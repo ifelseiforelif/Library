@@ -30,7 +30,7 @@ public class AuthorService : IAuthorService
     {
         var authors = await _authorRepository.GetAllAuthorsAsync();
         return _mapper.Map<ICollection<AuthorReadDto>>(authors);
-        
+
     }
 
     public async Task<AuthorReadDto?> GetAuthorByIdAsync(int id)

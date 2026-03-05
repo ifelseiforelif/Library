@@ -37,16 +37,16 @@ public class Program
             configuration.GetSection("Jwt"));
 
         // ================= Database =================
-        //builder.Services.AddDbContext<LibraryDbContext>(options =>
-        //{
-        //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        //});
         builder.Services.AddDbContext<LibraryDbContext>(options =>
-            options.UseMySql(
-                configuration.GetConnectionString("ConnectionToMySql"),
-                ServerVersion.AutoDetect(
-                    configuration.GetConnectionString("ConnectionToMySql")
-                )));
+        {
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
+        //builder.Services.AddDbContext<LibraryDbContext>(options =>
+        //    options.UseMySql(
+        //        configuration.GetConnectionString("ConnectionToMySql"),
+        //        ServerVersion.AutoDetect(
+        //            configuration.GetConnectionString("ConnectionToMySql")
+        //        )));
 
         // ================= AutoMapper =================
         builder.Services.AddAutoMapper(
@@ -78,6 +78,8 @@ public class Program
             cfg.RegisterServicesFromAssembly(typeof(GetAllCountriesHandler).Assembly);
 
         });
+        //================================CryptoProviderCache==========
+        builder.Services.AddMemoryCache();
         // ================= Repositories =================
         builder.Services.AddScoped<IBookRepository, BookRepository>();
         builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
@@ -92,6 +94,7 @@ public class Program
         builder.Services.AddScoped<IGenreService, GenreService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
         builder.Services.AddScoped<IHashHelper, HashHelper>();
+        builder.Services.AddScoped<ICachingService, MemoryCachingService>();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();

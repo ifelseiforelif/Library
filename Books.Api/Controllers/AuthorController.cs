@@ -32,7 +32,7 @@ namespace Books.Api.Controllers
             return Ok(author);
         }
 
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorCreateDto authorDto)
         {
