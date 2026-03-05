@@ -33,7 +33,12 @@ public class MemoryCachingService : ICachingService
 
     public Task SetAsync<T>(string key, T value, TimeSpan? exp)
     {
-        throw new NotImplementedException();
+        var options = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = exp ?? TimeSpan.FromMinutes(15)
+        };
 
+        _memoryCache.Set(key, value, options);
+        return Task.CompletedTask;
     }
 }

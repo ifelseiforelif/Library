@@ -15,12 +15,14 @@ public class AuthorService : IAuthorService
 {
     private readonly IMapper _mapper;
     private readonly IAuthorRepository _authorRepository;
-    public AuthorService(IMapper mapper, IAuthorRepository authorRepository)
+    private readonly ICachingService _cacheService;
+    public AuthorService(IMapper mapper, IAuthorRepository authorRepository, ICachingService cacheService)
     {
         _mapper = mapper;
         _authorRepository = authorRepository;
+        _cacheService = cacheService;
     }
-    public async Task<int?> CreateAuthorAsync(AuthorCreateDto dto)
+    public async Task<int?> CreateAuthorAsync(AuthorCreateDto dto) 
     {
         var authorEntity = _mapper.Map<AuthorEntity>(dto);
         return await _authorRepository.AddAuthorAsync(authorEntity);
@@ -28,8 +30,15 @@ public class AuthorService : IAuthorService
 
     public async Task<ICollection<AuthorReadDto>> GetAllAuthorsAsync()
     {
-        var authors = await _authorRepository.GetAllAuthorsAsync();
-        return _mapper.Map<ICollection<AuthorReadDto>>(authors);
+        var cache = await _cacheService.GetAsync<ICollection<AuthorReadDto>>("Authors");
+        if (cache == null)
+        {
+            var authors = await _authorRepository.GetAllAuthorsAsync();
+            cache = _mapper.Map<ICollection<AuthorReadDto>>(authors);
+            await _cacheService.SetAsync("Authors", cache, null);
+           
+        }
+        return cache;
 
     }
 

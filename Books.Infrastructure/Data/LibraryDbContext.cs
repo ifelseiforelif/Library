@@ -22,6 +22,7 @@ public class LibraryDbContext:DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //Fluent API
         if (Database.IsMySql())
         {
             modelBuilder.Entity<BookEntity>()
