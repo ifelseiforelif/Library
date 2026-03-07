@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Text;
 
 namespace Books.Api;
@@ -87,6 +88,13 @@ public class Program
         builder.Services.AddScoped<IGenreRepository, GenreRepository>();
         builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
+        //======================Redis=====================
+        builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+        {
+            var config = builder.Configuration.GetConnectionString("Redis");
+            return ConnectionMultiplexer.Connect(config);
+        });
+
         // ================= Services =================
         builder.Services.AddScoped<IBookService, BookService>();
         builder.Services.AddScoped<IAuthorService, AuthorService>();
@@ -94,7 +102,8 @@ public class Program
         builder.Services.AddScoped<IGenreService, GenreService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
         builder.Services.AddScoped<IHashHelper, HashHelper>();
-        builder.Services.AddScoped<ICachingService, MemoryCachingService>();
+        // builder.Services.AddScoped<ICachingService, MemoryCachingService>();
+        builder.Services.AddScoped<ICachingService, RedisCachingService>();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
