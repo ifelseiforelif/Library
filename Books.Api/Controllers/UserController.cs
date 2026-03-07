@@ -1,19 +1,30 @@
 ﻿using Books.Application.DTOs.UserDTOs;
 using Books.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Books.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UserController(IUserService _userService):ControllerBase
 {
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
+    {
+        var token = await _userService.LoginAsync(dto);
+        return Ok(new {accessToken=token});
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
         var users = await _userService.GetAllUserAsync();
         return Ok(users);
     }
+
 
     [HttpGet("{email}")]
     public async Task<IActionResult> GetUserByEmail([FromRoute] string email)
@@ -26,6 +37,7 @@ public class UserController(IUserService _userService):ControllerBase
         return Ok(user);
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
     {
