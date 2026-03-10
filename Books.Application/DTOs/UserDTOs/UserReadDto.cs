@@ -9,8 +9,9 @@ namespace Books.Application.DTOs.UserDTOs;
 
 public class UserReadDto
 {
-    public string Email { get; set; }
-    public string Role { get; set; }
+    public int? Id { get; set; }
+    public string Email { get; set; } = String.Empty;
+    public string Role { get; set; } = String.Empty;
     public DateTime CreatedAt { get; set; }
     public bool IsActive { get; set; }
 }

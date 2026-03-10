@@ -35,7 +35,12 @@ public class Program
             ?? throw new Exception("JWT settings not configured.");
 
         builder.Services.Configure<JwtSettings>(
-            configuration.GetSection("Jwt"));
+            configuration.GetSection("Jwt")
+        );
+
+        builder.Services.Configure<RabbitMqSettings>(
+            builder.Configuration.GetSection("RabbitMq")
+        );
 
         // ================= Database =================
         builder.Services.AddDbContext<LibraryDbContext>(options =>
@@ -72,7 +77,7 @@ public class Program
         builder.Services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(typeof(CreateCountryHandler).Assembly);
-           
+
         });
         builder.Services.AddMediatR(cfg =>
         {
@@ -87,12 +92,13 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IGenreRepository, GenreRepository>();
         builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+        builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         //======================Redis=====================
         builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
             var config = builder.Configuration.GetConnectionString("Redis");
-            return ConnectionMultiplexer.Connect(config);
+            return ConnectionMultiplexer.Connect(config??"localhost:5672");
         });
 
         // ================= Services =================
@@ -104,6 +110,7 @@ public class Program
         builder.Services.AddScoped<IHashHelper, HashHelper>();
         // builder.Services.AddScoped<ICachingService, MemoryCachingService>();
         builder.Services.AddScoped<ICachingService, RedisCachingService>();
+        builder.Services.AddScoped<IQueueService, RabbitMqService>();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();

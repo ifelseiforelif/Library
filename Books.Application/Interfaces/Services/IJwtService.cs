@@ -1,4 +1,5 @@
-﻿using Books.Application.DTOs.UserDTOs;
+﻿using Books.Application.DTOs.RefreshTokenDto;
+using Books.Application.DTOs.UserDTOs;
 using Books.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,4 +12,5 @@ namespace Books.Application.Interfaces.Services;
 public interface IJwtService
 {
     string GenerateAccessToken(UserLoginDto userLoginDto, string role);
+    Task<RefreshTokenReadDto> GenerateRefreshToken(UserLoginDto userLoginDto, string ipAddress);
 }

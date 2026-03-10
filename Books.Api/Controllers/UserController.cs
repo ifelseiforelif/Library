@@ -4,20 +4,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Books.Api.Controllers;
-
-[Authorize]
+/// <summary>
+/// До цього контролера повинен мати доступ лише Admin, тут CRUD Операції над користувачами
+/// </summary>
+/// <param name="_userService"></param>
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class UserController(IUserService _userService):ControllerBase
 {
-    [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
-    {
-        var token = await _userService.LoginAsync(dto);
-        return Ok(new {accessToken=token});
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
@@ -37,7 +32,7 @@ public class UserController(IUserService _userService):ControllerBase
         return Ok(user);
     }
 
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
     {
