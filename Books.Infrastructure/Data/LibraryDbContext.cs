@@ -24,10 +24,10 @@ public class LibraryDbContext:DbContext
         if (Database.IsMySql())
         {
             modelBuilder.Entity<BookEntity>()
-    .Property(b => b.CreatedAt)
-    .HasColumnType("datetime(6)")        // точность микросекунд
-    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
-    .ValueGeneratedOnAdd();
+            .Property(b => b.CreatedAt)
+            .HasColumnType("datetime(6)")        // точность микросекунд
+            .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+            .ValueGeneratedOnAdd();
         }
         else if (Database.IsSqlServer())
         {
