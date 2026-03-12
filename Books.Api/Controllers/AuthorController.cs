@@ -16,7 +16,7 @@ namespace Books.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorController(IAuthorService _authorService) : ControllerBase
+    public class AuthorController(IAuthorService _authorService, IQueueService _queue) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -36,6 +36,7 @@ namespace Books.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorCreateDto authorDto)
         {
+            _queue.PublishAsync("Authors", authorDto);
             int? id = await _authorService.CreateAuthorAsync(authorDto);
             if (id != null)
             {

@@ -98,7 +98,7 @@ public class Program
         builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
             var config = builder.Configuration.GetConnectionString("Redis");
-            return ConnectionMultiplexer.Connect(config??"localhost:5672");
+            return ConnectionMultiplexer.Connect(config??"localhost:6379");
         });
 
         // ================= Services =================
