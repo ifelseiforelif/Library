@@ -44,6 +44,8 @@ public class AuthorService : IAuthorService
 
     public async Task<AuthorReadDto?> GetAuthorByIdAsync(int id)
     {
+        if (id <= 0)
+            throw new ArgumentException("Id must be greater than or equal to 5.", nameof(id));
         return _mapper.Map<AuthorReadDto>(await _authorRepository.GetAuthorByIdAsync(id));
     }
 }

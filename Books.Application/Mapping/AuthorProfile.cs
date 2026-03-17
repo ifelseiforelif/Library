@@ -14,7 +14,9 @@ public class AuthorProfile : Profile
     public AuthorProfile()
     {
         //AuthoCreateDto - src, AuthorEntity - dest
-        CreateMap<AuthorCreateDto, AuthorEntity>();
+        CreateMap<AuthorCreateDto, AuthorEntity>()
+            .ForMember(dest=>dest.Id, opt=>opt.Ignore())
+            .ForMember(dest=>dest.Books, opt=>opt.Ignore());
 
         CreateMap<AuthorEntity, AuthorReadDto>()
            .ForMember(dest => dest.BooksId, opt => opt.MapFrom(src => src.Books.Select(b => b.Id)));

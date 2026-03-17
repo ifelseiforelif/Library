@@ -36,7 +36,7 @@ namespace Books.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorCreateDto authorDto)
         {
-            _queue.PublishAsync("Authors", authorDto);
+            await _queue.PublishAsync("Authors", authorDto);
             int? id = await _authorService.CreateAuthorAsync(authorDto);
             if (id != null)
             {

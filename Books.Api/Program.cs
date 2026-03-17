@@ -1,4 +1,5 @@
-﻿using Books.Application.Commands.CreateCountry;
+﻿using Books.Api.ExceptionHandlers;
+using Books.Application.Commands.CreateCountry;
 using Books.Application.Interfaces.Helpers;
 using Books.Application.Interfaces.Repositories;
 using Books.Application.Interfaces.Services;
@@ -41,7 +42,8 @@ public class Program
         builder.Services.Configure<RabbitMqSettings>(
             builder.Configuration.GetSection("RabbitMq")
         );
-
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         // ================= Database =================
         builder.Services.AddDbContext<LibraryDbContext>(options =>
         {
@@ -172,6 +174,7 @@ public class Program
         builder.Services.AddAuthorization();
 
         var app = builder.Build();
+        app.UseExceptionHandler();
         app.UseCors("AllowAll");
 
         // ================= Middleware =================
