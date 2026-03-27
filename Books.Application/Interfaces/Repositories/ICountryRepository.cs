@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Books.Application.Interfaces.Repositories;
 
-public interface IGenreRepository
+public interface ICountryRepository
 {
-    Task<ICollection<GenreEntity>> GetAllGenreAsync();
-    Task<GenreEntity?> GetGenreByIdAsync(int id);
-    Task<int?> AddGenreAsync(GenreEntity genre);
+    Task<ICollection<CountryEntity?>> GetAllContriesAsync();
+    Task<int?> AddCountryAsync(CountryEntity author);
 }

@@ -3,6 +3,7 @@ using Books.Application.DTOs.BookDTOs;
 using Books.Application.Interfaces.Services;
 using Books.Domain.Entities;
 using Books.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ namespace Books.Api.Controllers
             return Ok(author);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> AddAuthor([FromBody] AuthorCreateDto authorDto)
         {
